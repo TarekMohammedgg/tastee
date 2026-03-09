@@ -1,11 +1,15 @@
 class AppStrings {
-  // ── Auth ──
+  // Auth
 
-  // ── Home ──
+  // Home
+  static const String recipeFinderTitle = 'Recipe Finder';
+  static const String categoriesTitle = 'Categories';
+  static const String seeAll = 'See all';
 
-  // ── Profile ──
+  // Profile
 
-  // ── General ──
+  // General
+  static const String noRouteFound = 'No Route Found';
 
-  // ── Errors ──
+  // Errors
 }

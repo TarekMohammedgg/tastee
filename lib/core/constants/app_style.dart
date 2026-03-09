@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tastee/core/constants/app_colors.dart';
 
 class AppTextStyles {
   // Define the family name exactly as it appears in your pubspec.yaml
@@ -27,6 +28,7 @@ class AppTextStyles {
     fontFamily: fontFamily,
     fontSize: 18,
     fontWeight: FontWeight.w700,
+    color: AppColors.backgroundDark,
   );
 
   static const TextStyle bold14 = TextStyle(
