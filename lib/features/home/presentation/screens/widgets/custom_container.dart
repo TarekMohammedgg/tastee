@@ -34,7 +34,9 @@ class CustomContainer extends StatelessWidget {
         child: Align(
           alignment: Alignment.bottomLeft,
           child: Text(
+            maxLines: 2,
             title,
+            overflow: TextOverflow.ellipsis,
             style: AppTextStyles.bold14.copyWith(color: Colors.white),
           ),
         ),
