@@ -18,6 +18,7 @@ dependencies:
 
   # ── Backend ──
   supabase_flutter: ^2.9.0
+  dio: ^5.4.3+1
 
   # ── Local Storage ──
   shared_preferences: ^2.3.3
@@ -34,9 +35,14 @@ flutter:
     - assets/images/
     - assets/icons/
 
-  # fonts:
-  #   - family: YourFont
-  #     fonts:
-  #       - asset: assets/fonts/YourFont-Regular.ttf
-  #       - asset: assets/fonts/YourFont-Bold.ttf
-  #         weight: 700
+
+  fonts:
+    - family: PlusJakartaSans
+      fonts:
+        - asset: assets/fonts/PlusJakartaSans-Bold.ttf
+        - asset: assets/fonts/PlusJakartaSans-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/PlusJakartaSans-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/PlusJakartaSans-Regular.ttf
+          weight: 400
