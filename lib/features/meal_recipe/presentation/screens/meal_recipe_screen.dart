@@ -7,15 +7,22 @@ import 'package:tastee/features/meal_recipe/data/models/recipe_model.dart';
 import 'package:tastee/features/meal_recipe/presentation/cubit/recipe_cubit.dart';
 import 'package:tastee/features/meal_recipe/presentation/cubit/recipe_states.dart';
 
-class MealRecipeScreen extends StatelessWidget {
+class MealRecipeScreen extends StatefulWidget {
   final String mealId;
 
   const MealRecipeScreen({super.key, required this.mealId});
 
   @override
+  State<MealRecipeScreen> createState() => _MealRecipeScreenState();
+}
+
+class _MealRecipeScreenState extends State<MealRecipeScreen> {
+  bool isFavorite = false;
+
+  @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => RecipeCubit()..getRecipe(mealId),
+      create: (context) => RecipeCubit()..getRecipe(widget.mealId),
       child: Scaffold(
         backgroundColor: Colors.white,
         body: BlocBuilder<RecipeCubit, RecipeStates>(
@@ -84,11 +91,17 @@ class MealRecipeScreen extends StatelessWidget {
                                 CircleAvatar(
                                   backgroundColor: Colors.white,
                                   child: IconButton(
-                                    icon: const Icon(
-                                      Icons.favorite_border,
+                                    icon: Icon(
+                                      isFavorite
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
                                       color: AppColors.primary,
                                     ),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      setState(() {
+                                        isFavorite = !isFavorite;
+                                      });
+                                    },
                                   ),
                                 ),
                               ],

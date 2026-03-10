@@ -18,7 +18,10 @@ class MealsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("$categoryName Recipes", style: AppTextStyles.bold18),
+        title: Text(
+          "$categoryName Recipes",
+          style: AppTextStyles.bold18,
+        ),
         actions: [
           IconButton(
             onPressed: () {},
