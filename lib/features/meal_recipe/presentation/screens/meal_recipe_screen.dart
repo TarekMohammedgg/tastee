@@ -118,58 +118,11 @@ class MealRecipeScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: [
-                              _buildTag(
-                                recipe.strArea?.toUpperCase() ?? "AREA",
-                                true,
-                              ),
-                              const SizedBox(width: 10),
-                              _buildTag(
-                                recipe.strCategory?.toUpperCase() ?? "CATEGORY",
-                                false,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
                           Text(
                             recipe.strMeal ?? "",
                             style: AppTextStyles.bold24.copyWith(
                               fontSize: 26,
                               color: AppColors.backgroundDark,
-                            ),
-                          ),
-                          const SizedBox(height: 24),
-
-                          Container(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                color: Colors.grey.withValues(alpha: 0.2),
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                _buildInfoItem(
-                                  Icons.schedule,
-                                  AppColors.primary,
-                                  "25 mins",
-                                ),
-                                _buildVerticalDivider(),
-                                _buildInfoItem(
-                                  Icons.bar_chart,
-                                  AppColors.primary,
-                                  "Medium",
-                                ),
-                                _buildVerticalDivider(),
-                                _buildInfoItem(
-                                  Icons.local_fire_department_outlined,
-                                  AppColors.primary,
-                                  "450 kcal",
-                                ),
-                              ],
                             ),
                           ),
 
@@ -233,51 +186,6 @@ class MealRecipeScreen extends StatelessWidget {
           },
         ),
       ),
-    );
-  }
-
-  Widget _buildTag(String text, bool isPrimary) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      decoration: BoxDecoration(
-        color: isPrimary
-            ? AppColors.primary.withValues(alpha: 0.1)
-            : Colors.grey.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: isPrimary ? AppColors.primary : Colors.grey[600],
-          fontWeight: FontWeight.bold,
-          fontSize: 12,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInfoItem(IconData icon, Color color, String text) {
-    return Column(
-      children: [
-        Icon(icon, color: color, size: 24),
-        const SizedBox(height: 8),
-        Text(
-          text,
-          style: TextStyle(
-            color: Colors.grey[600],
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildVerticalDivider() {
-    return Container(
-      height: 40,
-      width: 1,
-      color: Colors.grey.withValues(alpha: 0.2),
     );
   }
 }
