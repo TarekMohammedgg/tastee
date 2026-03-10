@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Tastee',
       onGenerateRoute: AppRouter().generateRoute,
-      initialRoute: Routes.home,
+      initialRoute: Routes.layoutBottomNavBar,
     );
   }
 }
