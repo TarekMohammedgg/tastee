@@ -28,7 +28,7 @@ class AppTextStyles {
     fontFamily: fontFamily,
     fontSize: 18,
     fontWeight: FontWeight.w700,
-    color: AppColors.backgroundDark,
+    // color: AppColors.backgroundDark,
   );
 
   static const TextStyle bold14 = TextStyle(
@@ -48,6 +48,7 @@ class AppTextStyles {
     fontFamily: fontFamily,
     fontSize: 14,
     fontWeight: FontWeight.w600,
+    color: Colors.black,
   );
 
   // --- Regular (400) ---

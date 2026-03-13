@@ -21,10 +21,7 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         surfaceTintColor: Colors.transparent,
         shadowColor: Colors.transparent,
-        title: Text(
-          AppStrings.recipeFinderTitle,
-          style: AppTextStyles.bold20.copyWith(color: AppColors.surfaceDark),
-        ),
+        title: Text(AppStrings.recipeFinderTitle, style: AppTextStyles.bold20),
         actions: [
           IconButton(
             onPressed: () {},
@@ -52,7 +49,7 @@ class HomeScreen extends StatelessWidget {
                     Text(
                       AppStrings.categoriesTitle,
                       style: AppTextStyles.bold18.copyWith(
-                        color: AppColors.backgroundDark,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                     TextButton(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tastee/core/constants/app_colors.dart';
 import 'package:tastee/core/constants/app_style.dart';
 
 class CustomContainer extends StatelessWidget {

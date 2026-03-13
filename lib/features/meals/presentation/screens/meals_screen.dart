@@ -4,7 +4,8 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tastee/core/constants/app_colors.dart';
 import 'package:tastee/core/constants/app_style.dart';
 import 'package:tastee/core/routing/routes.dart';
-import 'package:tastee/features/home/presentation/screens/widgets/custom_container.dart';
+import 'package:tastee/features/favourite/presentation/cubit/favourite_cubit.dart';
+import 'package:tastee/features/favourite/presentation/cubit/favourite_states.dart';
 import 'package:tastee/features/meals/data/models/meal_model.dart';
 import 'package:tastee/features/meals/presentation/cubit/meals_cubit.dart';
 import 'package:tastee/features/meals/presentation/cubit/meals_states.dart';
@@ -18,10 +19,7 @@ class MealsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "$categoryName Recipes",
-          style: AppTextStyles.bold18,
-        ),
+        title: Text("$categoryName Recipes", style: AppTextStyles.bold18),
         actions: [
           IconButton(
             onPressed: () {},
@@ -91,19 +89,69 @@ class MealsScreen extends StatelessWidget {
                             children: [
                               Expanded(
                                 flex: 2,
-                                child:
+                                child: Stack(
+                                  children: [
                                     isLoading ||
-                                        meal.strMealThumb == null ||
-                                        meal.strMealThumb!.isEmpty
-                                    ? Container(
-                                        color: Colors.grey[300],
-                                        width: double.infinity,
-                                      )
-                                    : Image.network(
-                                        meal.strMealThumb!,
-                                        fit: BoxFit.fill,
-                                        width: double.infinity,
+                                            meal.strMealThumb == null ||
+                                            meal.strMealThumb!.isEmpty
+                                        ? Container(
+                                            color: Colors.grey[300],
+                                            width: double.infinity,
+                                          )
+                                        : Image.network(
+                                            meal.strMealThumb!,
+                                            fit: BoxFit.fill,
+                                            width: double.infinity,
+                                            height: double.infinity,
+                                          ),
+                                    if (!isLoading)
+                                      Positioned(
+                                        top: 6,
+                                        right: 6,
+                                        child:
+                                            BlocBuilder<
+                                              FavouriteCubit,
+                                              FavouriteStates
+                                            >(
+                                              builder: (context, favState) {
+                                                final isFav = context
+                                                    .read<FavouriteCubit>()
+                                                    .isFavourite(meal.idMeal);
+                                                return GestureDetector(
+                                                  onTap: () => context
+                                                      .read<FavouriteCubit>()
+                                                      .toggleFavourite(meal),
+                                                  child: Container(
+                                                    padding:
+                                                        const EdgeInsets.all(6),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      shape: BoxShape.circle,
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors.black
+                                                              .withValues(
+                                                                alpha: 0.1,
+                                                              ),
+                                                          blurRadius: 4,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    child: Icon(
+                                                      isFav
+                                                          ? Icons.favorite
+                                                          : Icons
+                                                                .favorite_border,
+                                                      color: AppColors.primary,
+                                                      size: 16,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
                                       ),
+                                  ],
+                                ),
                               ),
                               Expanded(
                                 flex: 1,
@@ -123,7 +171,10 @@ class MealsScreen extends StatelessWidget {
                                             ),
                                           ),
                                         )
-                                      : Text(meal.strMeal!),
+                                      : Text(
+                                          meal.strMeal!,
+                                          style: AppTextStyles.regular16.copyWith(color: Colors.black),
+                                        ),
                                 ),
                               ),
                             ],

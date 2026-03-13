@@ -3,6 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tastee/core/constants/app_colors.dart';
 import 'package:tastee/core/constants/app_style.dart';
+import 'package:tastee/core/theme/theme_cubit.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:tastee/core/routing/routes.dart';
 import 'package:tastee/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:tastee/features/profile/presentation/cubit/profile_states.dart';
 
@@ -11,20 +14,20 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return BlocProvider(
       create: (context) => ProfileCubit()..getProfile(),
       child: Scaffold(
-        backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            icon: Icon(Icons.arrow_back, color: colorScheme.onSurface),
             onPressed: () => Navigator.pop(context),
           ),
           title: Text(
             "Profile",
-            style: AppTextStyles.bold18.copyWith(color: Colors.black),
+            style: AppTextStyles.bold18.copyWith(color: colorScheme.onSurface),
           ),
           centerTitle: true,
         ),
@@ -43,21 +46,24 @@ class ProfileScreen extends StatelessWidget {
               child: Column(
                 children: [
                   // Profile Header
-                  _buildProfileHeader(name, email),
+                  _buildProfileHeader(context, name, email),
                   const SizedBox(height: 32),
 
                   // Account Section
-                  _buildSectionTitle("ACCOUNT"),
-                  _buildSectionContainer([
+                  _buildSectionTitle(context, "ACCOUNT"),
+                  _buildSectionContainer(context, [
                     _buildSettingsItem(
+                      context,
                       icon: Icons.person_outline,
                       title: "Edit Profile",
                     ),
                     _buildSettingsItem(
+                      context,
                       icon: Icons.lock_outline,
                       title: "Change Password",
                     ),
                     _buildSettingsItem(
+                      context,
                       icon: Icons.notifications_none_outlined,
                       title: "Notification Settings",
                       showBottomDivider: false,
@@ -67,18 +73,25 @@ class ProfileScreen extends StatelessWidget {
                   const SizedBox(height: 24),
 
                   // Preferences Section
-                  _buildSectionTitle("PREFERENCES"),
-                  _buildSectionContainer([
+                  _buildSectionTitle(context, "PREFERENCES"),
+                  _buildSectionContainer(context, [
                     _buildSettingsItem(
+                      context,
                       icon: Icons.dark_mode_outlined,
                       title: "Dark Mode",
-                      trailing: CupertinoSwitch(
-                        value: false,
-                        onChanged: (val) {},
-                        activeColor: AppColors.primary,
+                      trailing: BlocBuilder<ThemeCubit, ThemeMode>(
+                        builder: (context, themeMode) {
+                          return CupertinoSwitch(
+                            value: context.read<ThemeCubit>().isDark,
+                            onChanged: (_) =>
+                                context.read<ThemeCubit>().toggleTheme(),
+                            activeTrackColor: AppColors.primary,
+                          );
+                        },
                       ),
                     ),
                     _buildSettingsItem(
+                      context,
                       icon: Icons.language_outlined,
                       title: "Language",
                       trailing: Row(
@@ -106,17 +119,20 @@ class ProfileScreen extends StatelessWidget {
                   const SizedBox(height: 24),
 
                   // Support Section
-                  _buildSectionTitle("SUPPORT"),
-                  _buildSectionContainer([
+                  _buildSectionTitle(context, "SUPPORT"),
+                  _buildSectionContainer(context, [
                     _buildSettingsItem(
+                      context,
                       icon: Icons.help_outline,
                       title: "Help Center",
                     ),
                     _buildSettingsItem(
+                      context,
                       icon: Icons.verified_user_outlined,
                       title: "Privacy Policy",
                     ),
                     _buildSettingsItem(
+                      context,
                       icon: Icons.description_outlined,
                       title: "Terms of Service",
                       showBottomDivider: false,
@@ -127,7 +143,35 @@ class ProfileScreen extends StatelessWidget {
 
                   // Logout Button
                   InkWell(
-                    onTap: () {},
+                    onTap: () async {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (_) => const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                      try {
+                        await Supabase.instance.client.auth.signOut();
+                        if (context.mounted) {
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            Routes.login,
+                            (route) => false,
+                          );
+                        }
+                      } catch (e) {
+                        if (context.mounted) {
+                          Navigator.pop(context); // dismiss loading
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Logout failed: $e'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      }
+                    },
                     borderRadius: BorderRadius.circular(16),
                     child: Container(
                       width: double.infinity,
@@ -165,7 +209,8 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileHeader(String name, String email) {
+  Widget _buildProfileHeader(BuildContext context, String name, String email) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Column(
       children: [
         Stack(
@@ -205,7 +250,7 @@ class ProfileScreen extends StatelessWidget {
         Text(
           name,
           style: AppTextStyles.bold18.copyWith(
-            color: AppColors.backgroundDark,
+            color: colorScheme.onSurface,
             fontSize: 20,
           ),
         ),
@@ -215,7 +260,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionTitle(String title) {
+  Widget _buildSectionTitle(BuildContext context, String title) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Align(
@@ -233,22 +278,25 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionContainer(List<Widget> children) {
+  Widget _buildSectionContainer(BuildContext context, List<Widget> children) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
-        color: Colors.grey[50],
+        color: isDark ? AppColors.surfaceDark : Colors.grey[50],
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(children: children),
     );
   }
 
-  Widget _buildSettingsItem({
+  Widget _buildSettingsItem(
+    BuildContext context, {
     required IconData icon,
     required String title,
     Widget? trailing,
     bool showBottomDivider = true,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Column(
       children: [
         Padding(
@@ -267,10 +315,10 @@ class ProfileScreen extends StatelessWidget {
               Expanded(
                 child: Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.backgroundDark,
+                    color: colorScheme.onSurface,
                   ),
                 ),
               ),

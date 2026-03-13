@@ -11,6 +11,8 @@ class ProfileCubit extends Cubit<ProfileStates> {
     emit(ProfileLoading());
     final result = await repo.getUserProfile();
 
+    if (isClosed) return;
+
     result.fold(
       (error) => emit(ProfileError(error)),
       (profile) => emit(ProfileSuccess(profile)),

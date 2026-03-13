@@ -3,9 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tastee/core/constants/app_colors.dart';
 import 'package:tastee/core/constants/app_style.dart';
+import 'package:tastee/features/favourite/presentation/cubit/favourite_cubit.dart';
+import 'package:tastee/features/favourite/presentation/cubit/favourite_states.dart';
 import 'package:tastee/features/meal_recipe/data/models/recipe_model.dart';
 import 'package:tastee/features/meal_recipe/presentation/cubit/recipe_cubit.dart';
 import 'package:tastee/features/meal_recipe/presentation/cubit/recipe_states.dart';
+import 'package:tastee/features/meals/data/models/meal_model.dart';
 
 class MealRecipeScreen extends StatefulWidget {
   final String mealId;
@@ -17,20 +20,48 @@ class MealRecipeScreen extends StatefulWidget {
 }
 
 class _MealRecipeScreenState extends State<MealRecipeScreen> {
-  bool isFavorite = false;
-
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final scaffoldColor = Theme.of(context).scaffoldBackgroundColor;
+
     return BlocProvider(
       create: (context) => RecipeCubit()..getRecipe(widget.mealId),
       child: Scaffold(
-        backgroundColor: Colors.white,
+        // backgroundColor: Colors.white,
         body: BlocBuilder<RecipeCubit, RecipeStates>(
           builder: (context, state) {
             final isLoading = state is RecipeLoading || state is RecipeInitial;
 
             if (state is RecipeError) {
-              return Center(child: Text(state.errorMessage));
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 32),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.error_outline,
+                          size: 48, color: colorScheme.error),
+                      const SizedBox(height: 16),
+                      Text(
+                        state.errorMessage,
+                        style: AppTextStyles.semiBold14.copyWith(
+                          color: colorScheme.onSurface,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 16),
+                      FilledButton.icon(
+                        onPressed: () => context
+                            .read<RecipeCubit>()
+                            .getRecipe(widget.mealId),
+                        icon: const Icon(Icons.refresh),
+                        label: const Text("Retry"),
+                      ),
+                    ],
+                  ),
+                ),
+              );
             }
 
             final recipe = state is RecipeSuccess
@@ -61,7 +92,7 @@ class _MealRecipeScreenState extends State<MealRecipeScreen> {
                             ? Container(
                                 height: 350,
                                 width: double.infinity,
-                                color: Colors.grey[300],
+                                color: colorScheme.surfaceContainerHighest,
                               )
                             : Image.network(
                                 recipe.strMealThumb!,
@@ -79,30 +110,54 @@ class _MealRecipeScreenState extends State<MealRecipeScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 CircleAvatar(
-                                  backgroundColor: Colors.white,
+                                  backgroundColor:
+                                      scaffoldColor.withValues(alpha: 0.85),
                                   child: IconButton(
-                                    icon: const Icon(
+                                    icon: Icon(
                                       Icons.arrow_back,
-                                      color: Colors.black,
+                                      color: colorScheme.onSurface,
                                     ),
                                     onPressed: () => Navigator.pop(context),
                                   ),
                                 ),
-                                CircleAvatar(
-                                  backgroundColor: Colors.white,
-                                  child: IconButton(
-                                    icon: Icon(
-                                      isFavorite
-                                          ? Icons.favorite
-                                          : Icons.favorite_border,
-                                      color: AppColors.primary,
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        isFavorite = !isFavorite;
-                                      });
-                                    },
-                                  ),
+                                BlocBuilder<FavouriteCubit, FavouriteStates>(
+                                  builder: (context, favState) {
+                                    final isFav = context
+                                        .read<FavouriteCubit>()
+                                        .isFavourite(widget.mealId);
+                                    return CircleAvatar(
+                                      backgroundColor:
+                                          scaffoldColor.withValues(alpha: 0.85),
+                                      child: IconButton(
+                                        icon: AnimatedSwitcher(
+                                          duration:
+                                              const Duration(milliseconds: 250),
+                                          transitionBuilder: (child, anim) =>
+                                              ScaleTransition(
+                                                  scale: anim, child: child),
+                                          child: Icon(
+                                            isFav
+                                                ? Icons.favorite
+                                                : Icons.favorite_border,
+                                            key: ValueKey(isFav),
+                                            color: AppColors.primary,
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          context
+                                              .read<FavouriteCubit>()
+                                              .toggleFavourite(
+                                                MealModel(
+                                                  idMeal: widget.mealId,
+                                                  strMeal: recipe.strMeal,
+                                                  strMealThumb:
+                                                      recipe.strMealThumb,
+                                                ),
+                                              );
+                                        },
+                                      ),
+                                    );
+                                  },
                                 ),
                               ],
                             ),
@@ -114,9 +169,9 @@ class _MealRecipeScreenState extends State<MealRecipeScreen> {
                           right: 0,
                           child: Container(
                             height: 30,
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.vertical(
+                            decoration: BoxDecoration(
+                              color: scaffoldColor,
+                              borderRadius: const BorderRadius.vertical(
                                 top: Radius.circular(30),
                               ),
                             ),
@@ -127,7 +182,7 @@ class _MealRecipeScreenState extends State<MealRecipeScreen> {
 
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                      color: Colors.white,
+                      color: scaffoldColor,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -135,7 +190,7 @@ class _MealRecipeScreenState extends State<MealRecipeScreen> {
                             recipe.strMeal ?? "",
                             style: AppTextStyles.bold24.copyWith(
                               fontSize: 26,
-                              color: AppColors.backgroundDark,
+                              color: colorScheme.onSurface,
                             ),
                           ),
 
@@ -144,7 +199,7 @@ class _MealRecipeScreenState extends State<MealRecipeScreen> {
                             "Ingredients",
                             style: AppTextStyles.bold18.copyWith(
                               fontSize: 20,
-                              color: AppColors.backgroundDark,
+                              color: colorScheme.onSurface,
                             ),
                           ),
                           const SizedBox(height: 16),
@@ -179,7 +234,8 @@ class _MealRecipeScreenState extends State<MealRecipeScreen> {
                                       recipe.ingredients[index],
                                       style: TextStyle(
                                         fontSize: 15,
-                                        color: Colors.grey[700],
+                                        color: colorScheme.onSurface
+                                            .withValues(alpha: 0.7),
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
