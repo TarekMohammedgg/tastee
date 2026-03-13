@@ -17,6 +17,8 @@ class MealsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("$categoryName Recipes", style: AppTextStyles.bold18),
@@ -79,7 +81,7 @@ class MealsScreen extends StatelessWidget {
                         child: Container(
                           clipBehavior: Clip.antiAlias,
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: colorScheme.surface,
                             borderRadius: BorderRadius.circular(16),
                           ),
                           height: 250,
@@ -95,7 +97,7 @@ class MealsScreen extends StatelessWidget {
                                             meal.strMealThumb == null ||
                                             meal.strMealThumb!.isEmpty
                                         ? Container(
-                                            color: Colors.grey[300],
+                                            color: colorScheme.surfaceContainerHighest,
                                             width: double.infinity,
                                           )
                                         : Image.network(
@@ -125,7 +127,7 @@ class MealsScreen extends StatelessWidget {
                                                     padding:
                                                         const EdgeInsets.all(6),
                                                     decoration: BoxDecoration(
-                                                      color: Colors.white,
+                                                      color: colorScheme.surface,
                                                       shape: BoxShape.circle,
                                                       boxShadow: [
                                                         BoxShadow(
@@ -165,7 +167,7 @@ class MealsScreen extends StatelessWidget {
                                           height: 14,
                                           width: 100,
                                           decoration: BoxDecoration(
-                                            color: Colors.grey[300],
+                                            color: colorScheme.surfaceContainerHighest,
                                             borderRadius: BorderRadius.circular(
                                               4,
                                             ),
@@ -173,7 +175,7 @@ class MealsScreen extends StatelessWidget {
                                         )
                                       : Text(
                                           meal.strMeal!,
-                                          style: AppTextStyles.regular16.copyWith(color: Colors.black),
+                                          style: AppTextStyles.regular16.copyWith(color: colorScheme.onSurface),
                                         ),
                                 ),
                               ),
