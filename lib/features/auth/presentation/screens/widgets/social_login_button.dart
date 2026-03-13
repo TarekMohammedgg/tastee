@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../../../core/constants/app_colors.dart';
 import '../../../../../../core/constants/app_style.dart';
 
 class SocialLoginButton extends StatelessWidget {
@@ -14,13 +13,15 @@ class SocialLoginButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return SizedBox(
       width: double.infinity,
       height: 56,
       child: OutlinedButton.icon(
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
-          side: const BorderSide(color: AppColors.surfaceDark),
+          side: BorderSide(color: colorScheme.outlineVariant),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -34,7 +35,7 @@ class SocialLoginButton extends StatelessWidget {
         ),
         label: Text(
           text,
-          style: AppTextStyles.semiBold16.copyWith(color: Colors.white),
+          style: AppTextStyles.semiBold16.copyWith(color: colorScheme.onSurface),
         ),
       ),
     );

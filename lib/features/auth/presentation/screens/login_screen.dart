@@ -40,8 +40,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
       body: BlocConsumer<AuthCubit, AuthStates>(
         listener: (context, state) {
           if (state is AuthSuccess) {
@@ -73,8 +74,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     Center(
                       child: Container(
                         padding: const EdgeInsets.all(16),
-                        decoration: const BoxDecoration(
-                          color: AppColors.surfaceDark,
+                        decoration: BoxDecoration(
+                          color: colorScheme.surfaceContainerHighest,
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(Icons.restaurant_menu, color: AppColors.primary, size: 48),
@@ -83,12 +84,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 48),
                     Text(
                       AppStrings.loginTitle,
-                      style: AppTextStyles.bold30.copyWith(color: Colors.white),
+                      style: AppTextStyles.bold30.copyWith(color: colorScheme.onSurface),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       AppStrings.loginSubtitle,
-                      style: AppTextStyles.regular16.copyWith(color: AppColors.textGrey),
+                      style: AppTextStyles.regular16.copyWith(color: colorScheme.onSurfaceVariant),
                     ),
                     const SizedBox(height: 40),
                     CustomTextField(
@@ -111,15 +112,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 16),
                     Row(
                       children: [
-                        const Expanded(child: Divider(color: AppColors.surfaceDark)),
+                        Expanded(child: Divider(color: colorScheme.outlineVariant)),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Text(
                             'Or',
-                            style: AppTextStyles.regular16.copyWith(color: AppColors.textGrey),
+                            style: AppTextStyles.regular16.copyWith(color: colorScheme.onSurfaceVariant),
                           ),
                         ),
-                        const Expanded(child: Divider(color: AppColors.surfaceDark)),
+                        Expanded(child: Divider(color: colorScheme.outlineVariant)),
                       ],
                     ),
                     const SizedBox(height: 16),
@@ -135,7 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         Text(
                           AppStrings.dontHaveAccount,
-                          style: AppTextStyles.regular16.copyWith(color: AppColors.textGrey),
+                          style: AppTextStyles.regular16.copyWith(color: colorScheme.onSurfaceVariant),
                         ),
                         TextButton(
                           onPressed: () {

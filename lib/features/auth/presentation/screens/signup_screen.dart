@@ -40,8 +40,9 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
       body: BlocConsumer<AuthCubit, AuthStates>(
         listener: (context, state) {
           if (state is AuthSuccess) {
@@ -72,7 +73,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       children: [
                         IconButton(
                           onPressed: () => Navigator.pop(context),
-                          icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
+                          icon: Icon(Icons.arrow_back_ios, color: colorScheme.onSurface, size: 20),
                         ),
                       ],
                     ),
@@ -81,8 +82,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     Center(
                       child: Container(
                         padding: const EdgeInsets.all(16),
-                        decoration: const BoxDecoration(
-                          color: AppColors.surfaceDark,
+                        decoration: BoxDecoration(
+                          color: colorScheme.surfaceContainerHighest,
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(Icons.person_add, color: AppColors.primary, size: 48),
@@ -91,12 +92,12 @@ class _SignupScreenState extends State<SignupScreen> {
                     const SizedBox(height: 48),
                     Text(
                       AppStrings.signupTitle,
-                      style: AppTextStyles.bold30.copyWith(color: Colors.white),
+                      style: AppTextStyles.bold30.copyWith(color: colorScheme.onSurface),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       AppStrings.signupSubtitle,
-                      style: AppTextStyles.regular16.copyWith(color: AppColors.textGrey),
+                      style: AppTextStyles.regular16.copyWith(color: colorScheme.onSurfaceVariant),
                     ),
                     const SizedBox(height: 40),
                     CustomTextField(
@@ -119,15 +120,15 @@ class _SignupScreenState extends State<SignupScreen> {
                     const SizedBox(height: 16),
                     Row(
                       children: [
-                        const Expanded(child: Divider(color: AppColors.surfaceDark)),
+                        Expanded(child: Divider(color: colorScheme.outlineVariant)),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Text(
                             'Or',
-                            style: AppTextStyles.regular16.copyWith(color: AppColors.textGrey),
+                            style: AppTextStyles.regular16.copyWith(color: colorScheme.onSurfaceVariant),
                           ),
                         ),
-                        const Expanded(child: Divider(color: AppColors.surfaceDark)),
+                        Expanded(child: Divider(color: colorScheme.outlineVariant)),
                       ],
                     ),
                     const SizedBox(height: 16),
@@ -143,7 +144,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       children: [
                         Text(
                           AppStrings.alreadyHaveAccount,
-                          style: AppTextStyles.regular16.copyWith(color: AppColors.textGrey),
+                          style: AppTextStyles.regular16.copyWith(color: colorScheme.onSurfaceVariant),
                         ),
                         TextButton(
                           onPressed: () {

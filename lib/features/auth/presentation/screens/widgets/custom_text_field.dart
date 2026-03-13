@@ -18,16 +18,18 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return TextFormField(
       controller: controller,
       obscureText: obscureText,
       keyboardType: keyboardType,
-      style: AppTextStyles.regular16.copyWith(color: Colors.white),
+      style: AppTextStyles.regular16.copyWith(color: colorScheme.onSurface),
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: AppTextStyles.regular16.copyWith(color: AppColors.textGrey),
+        hintStyle: AppTextStyles.regular16.copyWith(color: colorScheme.onSurfaceVariant),
         filled: true,
-        fillColor: AppColors.surfaceDark,
+        fillColor: colorScheme.surfaceContainerHighest,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
