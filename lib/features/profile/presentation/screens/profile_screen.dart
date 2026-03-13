@@ -224,11 +224,13 @@ class ProfileScreen extends StatelessWidget {
                   width: 3,
                 ),
               ),
-              child: const CircleAvatar(
+              child: CircleAvatar(
                 radius: 40,
-                backgroundColor: Colors.white,
-                backgroundImage: NetworkImage(
-                  "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1024px-Google_%22G%22_logo.svg.png",
+                backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+                child: Icon(
+                  Icons.person,
+                  size: 40,
+                  color: AppColors.primary,
                 ),
               ),
             ),

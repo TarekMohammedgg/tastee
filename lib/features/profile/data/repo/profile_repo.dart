@@ -9,8 +9,6 @@ class ProfileRepo {
       ProfileModel(
         name: "Alex Johnson",
         email: "alex.j@example.com",
-        avatarUrl:
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1024px-Google_%22G%22_logo.svg.png",
       ),
     );
   }
